@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Download, RefreshCw } from "lucide-react"
+import { Copy, RefreshCw, Check } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface AttributeOption {
   id: number
@@ -32,6 +33,8 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
   const [inputData, setInputData] = useState("")
   const [parsedData, setParsedData] = useState<any[]>([])
   const [attributes, setAttributes] = useState<any[]>([])
+  const [isCopied, setIsCopied] = useState(false)
+  const { toast } = useToast()
 
   const updatePreview = () => {
     try {
@@ -73,7 +76,7 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
     setAttributes(updated)
   }
 
-  const exportJSON = () => {
+  const copyToClipboard = async () => {
     const exportData = JSON.parse(JSON.stringify(parsedData))
 
     attributes.forEach((attr) => {
@@ -83,16 +86,24 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
     })
 
     const jsonOutput = JSON.stringify(exportData, null, 2)
-    const blob = new Blob([jsonOutput], { type: "application/json" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = "exported_attributes.json"
-    a.click()
-    URL.revokeObjectURL(url)
+
+    try {
+      await navigator.clipboard.writeText(jsonOutput)
+      setIsCopied(true)
+      toast({
+        title: "Đã sao chép!",
+        description: "JSON đã được sao chép vào clipboard",
+      })
+      setTimeout(() => setIsCopied(false), 2000)
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Không thể sao chép vào clipboard",
+        variant: "destructive",
+      })
+    }
   }
 
-  // Group attributes by equipment
   const groupedAttributes = attributes.reduce((acc: any, attr) => {
     const key = `${attr.equipIndex}-${attr.equipmentName}`
     if (!acc[key]) {
@@ -129,9 +140,18 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Label className="text-lg font-semibold">Preview</Label>
-          <Button onClick={exportJSON} disabled={attributes.length === 0} size="lg">
-            <Download className="mr-2 h-4 w-4" />
-            Xuất JSON
+          <Button onClick={copyToClipboard} disabled={attributes.length === 0} size="lg">
+            {isCopied ? (
+              <>
+                <Check className="mr-2 h-4 w-4" />
+                Đã sao chép
+              </>
+            ) : (
+              <>
+                <Copy className="mr-2 h-4 w-4" />
+                Sao chép JSON
+              </>
+            )}
           </Button>
         </div>
 
