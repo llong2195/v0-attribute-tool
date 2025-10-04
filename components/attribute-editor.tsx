@@ -1,15 +1,17 @@
 "use client"
 
-import { useState, useMemo, memo } from "react"
+import type React from "react"
+
+import { useState, useMemo, memo, useCallback, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Copy, RefreshCw, Check, ChevronDown, ChevronUp, Plus, ArrowUp, ArrowDown, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Combobox } from "@/components/ui/combobox"
 
 interface AttributeOption {
   id: number
@@ -32,65 +34,72 @@ interface AttributeEditorProps {
 const AttributeItem = memo(
   ({
     attr,
-    globalIndex,
-    attributeOptions,
+    localIndex,
+    totalInGroup,
+    comboboxOptions,
     onUpdate,
     onMoveUp,
     onMoveDown,
     onDelete,
-    isFirst,
-    isLast,
   }: {
     attr: any
-    globalIndex: number
-    attributeOptions: AttributeOption[]
-    onUpdate: (index: number, field: "value" | "attrId", newValue: any) => void
-    onMoveUp: (index: number) => void
-    onMoveDown: (index: number) => void
-    onDelete: (index: number) => void
-    isFirst: boolean
-    isLast: boolean
+    localIndex: number
+    totalInGroup: number
+    comboboxOptions: Array<{ value: string; label: string }>
+    onUpdate: (equipIndex: number, attrIndex: number, field: "value" | "attrId", newValue: any) => void
+    onMoveUp: (equipIndex: number, attrIndex: number) => void
+    onMoveDown: (equipIndex: number, attrIndex: number) => void
+    onDelete: (equipIndex: number, attrIndex: number) => void
   }) => {
+    const handleValueChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        onUpdate(attr.equipIndex, attr.attrIndex, "value", e.target.value)
+      },
+      [attr.equipIndex, attr.attrIndex, onUpdate],
+    )
+
+    const handleAttrChange = useCallback(
+      (value: string) => {
+        onUpdate(attr.equipIndex, attr.attrIndex, "attrId", Number.parseInt(value))
+      },
+      [attr.equipIndex, attr.attrIndex, onUpdate],
+    )
+
+    const handleMoveUp = useCallback(() => {
+      onMoveUp(attr.equipIndex, attr.attrIndex)
+    }, [attr.equipIndex, attr.attrIndex, onMoveUp])
+
+    const handleMoveDown = useCallback(() => {
+      onMoveDown(attr.equipIndex, attr.attrIndex)
+    }, [attr.equipIndex, attr.attrIndex, onMoveDown])
+
+    const handleDelete = useCallback(() => {
+      onDelete(attr.equipIndex, attr.attrIndex)
+    }, [attr.equipIndex, attr.attrIndex, onDelete])
+
     return (
       <div className="flex items-center gap-2 p-3 border rounded-lg bg-muted/50">
         <Label className="text-sm font-mono min-w-[60px]">id: {attr.attrId}</Label>
-        <Input
-          type="number"
-          value={attr.value}
-          onChange={(e) => onUpdate(globalIndex, "value", e.target.value)}
-          className="w-24"
-        />
-        <Select
+        <Input type="number" value={attr.value} onChange={handleValueChange} className="w-24" />
+        <Combobox
+          options={comboboxOptions}
           value={attr.attrId.toString()}
-          onValueChange={(value) => onUpdate(globalIndex, "attrId", Number.parseInt(value))}
-        >
-          <SelectTrigger className="flex-1">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {attributeOptions.map((option) => (
-              <SelectItem key={option.id} value={option.id.toString()}>
-                {option.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          onValueChange={handleAttrChange}
+          placeholder="Chọn thuộc tính..."
+          searchPlaceholder="Tìm kiếm..."
+          emptyText="Không tìm thấy"
+          className="flex-1"
+        />
         <div className="flex gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={() => onMoveUp(globalIndex)}
-            disabled={isFirst}
-          >
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleMoveUp} disabled={localIndex === 0}>
             <ArrowUp className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => onMoveDown(globalIndex)}
-            disabled={isLast}
+            onClick={handleMoveDown}
+            disabled={localIndex === totalInGroup - 1}
           >
             <ArrowDown className="h-4 w-4" />
           </Button>
@@ -98,7 +107,7 @@ const AttributeItem = memo(
             variant="ghost"
             size="icon"
             className="h-8 w-8 text-destructive hover:text-destructive"
-            onClick={() => onDelete(globalIndex)}
+            onClick={handleDelete}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -111,9 +120,10 @@ AttributeItem.displayName = "AttributeItem"
 
 const EquipmentCard = memo(
   ({
-    group,
+    equipIndex,
+    equipmentName,
     attributes,
-    attributeOptions,
+    comboboxOptions,
     onUpdate,
     onMoveUp,
     onMoveDown,
@@ -122,54 +132,52 @@ const EquipmentCard = memo(
     isExpanded,
     onToggle,
   }: {
-    group: any
+    equipIndex: number
+    equipmentName: string
     attributes: any[]
-    attributeOptions: AttributeOption[]
-    onUpdate: (index: number, field: "value" | "attrId", newValue: any) => void
-    onMoveUp: (index: number) => void
-    onMoveDown: (index: number) => void
-    onDelete: (index: number) => void
+    comboboxOptions: Array<{ value: string; label: string }>
+    onUpdate: (equipIndex: number, attrIndex: number, field: "value" | "attrId", newValue: any) => void
+    onMoveUp: (equipIndex: number, attrIndex: number) => void
+    onMoveDown: (equipIndex: number, attrIndex: number) => void
+    onDelete: (equipIndex: number, attrIndex: number) => void
     onAddAttribute: (equipIndex: number) => void
     isExpanded: boolean
     onToggle: () => void
   }) => {
+    const sortedAttributes = useMemo(() => {
+      return [...attributes].sort((a, b) => a.attrIndex - b.attrIndex)
+    }, [attributes])
+
+    const handleAddAttribute = useCallback(() => {
+      onAddAttribute(equipIndex)
+    }, [equipIndex, onAddAttribute])
+
     return (
       <Card>
         <CardHeader className="cursor-pointer" onClick={onToggle}>
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">
-              Trang bị {group.equipmentName} - thuộc tính: ({group.attributes.length})
+              Trang bị {equipmentName} - thuộc tính: ({attributes.length})
             </CardTitle>
             {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </div>
         </CardHeader>
         {isExpanded && (
           <CardContent className="space-y-3">
-            {group.attributes.map((attr: any, index: number) => {
-              const globalIndex = attributes.findIndex(
-                (a) => a.equipIndex === attr.equipIndex && a.attrIndex === attr.attrIndex,
-              )
-              const equipmentAttrs = group.attributes
-              return (
-                <AttributeItem
-                  key={`${attr.equipIndex}-${attr.attrIndex}`}
-                  attr={attr}
-                  globalIndex={globalIndex}
-                  attributeOptions={attributeOptions}
-                  onUpdate={onUpdate}
-                  onMoveUp={onMoveUp}
-                  onMoveDown={onMoveDown}
-                  onDelete={onDelete}
-                  isFirst={index === 0}
-                  isLast={index === equipmentAttrs.length - 1}
-                />
-              )
-            })}
-            <Button
-              variant="outline"
-              className="w-full bg-transparent"
-              onClick={() => onAddAttribute(group.attributes[0].equipIndex)}
-            >
+            {sortedAttributes.map((attr, index) => (
+              <AttributeItem
+                key={`${attr.equipIndex}-${attr.attrIndex}`}
+                attr={attr}
+                localIndex={index}
+                totalInGroup={sortedAttributes.length}
+                comboboxOptions={comboboxOptions}
+                onUpdate={onUpdate}
+                onMoveUp={onMoveUp}
+                onMoveDown={onMoveDown}
+                onDelete={onDelete}
+              />
+            ))}
+            <Button variant="outline" className="w-full bg-transparent" onClick={handleAddAttribute}>
               <Plus className="mr-2 h-4 w-4" />
               Thêm thuộc tính
             </Button>
@@ -183,15 +191,33 @@ EquipmentCard.displayName = "EquipmentCard"
 
 export function AttributeEditor({ attributeOptions, equipmentOptions }: AttributeEditorProps) {
   const [inputData, setInputData] = useState("")
+  const [debouncedInput, setDebouncedInput] = useState("")
   const [parsedData, setParsedData] = useState<any[]>([])
   const [attributes, setAttributes] = useState<any[]>([])
   const [isCopied, setIsCopied] = useState(false)
-  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set())
+  const [expandedCards, setExpandedCards] = useState<Set<number>>(new Set())
   const { toast } = useToast()
 
-  const updatePreview = () => {
+  const comboboxOptions = useMemo(
+    () =>
+      attributeOptions.map((option) => ({
+        value: option.id.toString(),
+        label: option.name,
+      })),
+    [attributeOptions],
+  )
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedInput(inputData)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [inputData])
+
+  const updatePreview = useCallback(() => {
     try {
-      const data = JSON.parse(inputData)
+      const data = JSON.parse(debouncedInput)
       setParsedData(data)
 
       const newAttributes: any[] = []
@@ -218,100 +244,117 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
       })
 
       setAttributes(newAttributes)
-      const firstThreeKeys = Array.from(
-        new Set(newAttributes.map((attr) => `${attr.equipIndex}-${attr.equipmentName}`)),
-      ).slice(0, 3)
-      setExpandedCards(new Set(firstThreeKeys))
+      setExpandedCards(new Set())
     } catch (error) {
-      alert("Dữ liệu JSON không hợp lệ")
+      toast({
+        title: "Lỗi",
+        description: "Dữ liệu JSON không hợp lệ",
+        variant: "destructive",
+      })
     }
-  }
+  }, [debouncedInput, attributeOptions, equipmentOptions, toast])
 
-  const updateAttribute = (index: number, field: "value" | "attrId", newValue: any) => {
-    const updated = [...attributes]
-    updated[index][field] = newValue
-    setAttributes(updated)
-  }
+  const updateAttribute = useCallback(
+    (equipIndex: number, attrIndex: number, field: "value" | "attrId", newValue: any) => {
+      setAttributes((prev) =>
+        prev.map((attr) =>
+          attr.equipIndex === equipIndex && attr.attrIndex === attrIndex ? { ...attr, [field]: newValue } : attr,
+        ),
+      )
+    },
+    [],
+  )
 
-  const moveAttributeUp = (globalIndex: number) => {
-    const attr = attributes[globalIndex]
-    const equipmentAttrs = attributes.filter((a) => a.equipIndex === attr.equipIndex)
-    const localIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attr.attrIndex)
+  const moveAttributeUp = useCallback((equipIndex: number, attrIndex: number) => {
+    setAttributes((prev) => {
+      const equipmentAttrs = prev
+        .filter((a) => a.equipIndex === equipIndex)
+        .sort((a, b) => a.attrIndex - b.attrIndex)
+        .map((a) => ({ ...a }))
 
-    if (localIndex === 0) return
+      const currentIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attrIndex)
 
-    const updated = [...attributes]
-    const currentGlobalIndex = globalIndex
-    const prevAttr = equipmentAttrs[localIndex - 1]
-    const prevGlobalIndex = attributes.findIndex(
-      (a) => a.equipIndex === prevAttr.equipIndex && a.attrIndex === prevAttr.attrIndex,
-    )
+      if (currentIndex === 0) return prev
 
-    // Swap attrIndex values
-    const tempIndex = updated[currentGlobalIndex].attrIndex
-    updated[currentGlobalIndex].attrIndex = updated[prevGlobalIndex].attrIndex
-    updated[prevGlobalIndex].attrIndex = tempIndex
+      // Swap positions in the sorted array
+      const temp = equipmentAttrs[currentIndex]
+      equipmentAttrs[currentIndex] = equipmentAttrs[currentIndex - 1]
+      equipmentAttrs[currentIndex - 1] = temp
 
-    setAttributes(updated)
-  }
+      // Reassign attrIndex values sequentially
+      equipmentAttrs.forEach((attr, idx) => {
+        attr.attrIndex = idx
+      })
 
-  const moveAttributeDown = (globalIndex: number) => {
-    const attr = attributes[globalIndex]
-    const equipmentAttrs = attributes.filter((a) => a.equipIndex === attr.equipIndex)
-    const localIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attr.attrIndex)
-
-    if (localIndex === equipmentAttrs.length - 1) return
-
-    const updated = [...attributes]
-    const currentGlobalIndex = globalIndex
-    const nextAttr = equipmentAttrs[localIndex + 1]
-    const nextGlobalIndex = attributes.findIndex(
-      (a) => a.equipIndex === nextAttr.equipIndex && a.attrIndex === nextAttr.attrIndex,
-    )
-
-    // Swap attrIndex values
-    const tempIndex = updated[currentGlobalIndex].attrIndex
-    updated[currentGlobalIndex].attrIndex = updated[nextGlobalIndex].attrIndex
-    updated[nextGlobalIndex].attrIndex = tempIndex
-
-    setAttributes(updated)
-  }
-
-  const deleteAttribute = (globalIndex: number) => {
-    const attr = attributes[globalIndex]
-    const updated = attributes.filter((_, i) => i !== globalIndex)
-
-    // Reindex remaining attributes for the same equipment
-    const reindexed = updated.map((a) => {
-      if (a.equipIndex === attr.equipIndex && a.attrIndex > attr.attrIndex) {
-        return { ...a, attrIndex: a.attrIndex - 1 }
-      }
-      return a
+      const otherAttrs = prev.filter((a) => a.equipIndex !== equipIndex)
+      return [...otherAttrs, ...equipmentAttrs].sort((a, b) => a.equipIndex - b.equipIndex)
     })
+  }, [])
 
-    setAttributes(reindexed)
-  }
+  const moveAttributeDown = useCallback((equipIndex: number, attrIndex: number) => {
+    setAttributes((prev) => {
+      const equipmentAttrs = prev
+        .filter((a) => a.equipIndex === equipIndex)
+        .sort((a, b) => a.attrIndex - b.attrIndex)
+        .map((a) => ({ ...a }))
 
-  const addAttribute = (equipIndex: number) => {
-    const equipmentAttrs = attributes.filter((a) => a.equipIndex === equipIndex)
-    const maxAttrIndex = equipmentAttrs.length > 0 ? Math.max(...equipmentAttrs.map((a) => a.attrIndex)) : -1
-    const equipment = parsedData[equipIndex]
-    const itemId = equipment[1]
-    const equipmentInfo = equipmentOptions.find((opt) => opt.id === itemId)
+      const currentIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attrIndex)
 
-    const newAttr = {
-      equipIndex,
-      attrIndex: maxAttrIndex + 1,
-      equipmentName: equipmentInfo?.name || `ID: ${itemId}`,
-      attrId: attributeOptions[0]?.id || 1,
-      attrName: attributeOptions[0]?.name || "Unknown",
-      value: 0,
-    }
+      if (currentIndex === equipmentAttrs.length - 1) return prev
 
-    setAttributes([...attributes, newAttr])
-  }
+      // Swap positions in the sorted array
+      const temp = equipmentAttrs[currentIndex]
+      equipmentAttrs[currentIndex] = equipmentAttrs[currentIndex + 1]
+      equipmentAttrs[currentIndex + 1] = temp
 
-  const copyToClipboard = async () => {
+      // Reassign attrIndex values sequentially
+      equipmentAttrs.forEach((attr, idx) => {
+        attr.attrIndex = idx
+      })
+
+      const otherAttrs = prev.filter((a) => a.equipIndex !== equipIndex)
+      return [...otherAttrs, ...equipmentAttrs].sort((a, b) => a.equipIndex - b.equipIndex)
+    })
+  }, [])
+
+  const deleteAttribute = useCallback((equipIndex: number, attrIndex: number) => {
+    setAttributes((prev) => {
+      const filtered = prev.filter((a) => !(a.equipIndex === equipIndex && a.attrIndex === attrIndex))
+
+      return filtered.map((attr) => {
+        if (attr.equipIndex === equipIndex && attr.attrIndex > attrIndex) {
+          return { ...attr, attrIndex: attr.attrIndex - 1 }
+        }
+        return attr
+      })
+    })
+  }, [])
+
+  const addAttribute = useCallback(
+    (equipIndex: number) => {
+      setAttributes((prev) => {
+        const equipmentAttrs = prev.filter((a) => a.equipIndex === equipIndex)
+        const maxAttrIndex = equipmentAttrs.length > 0 ? Math.max(...equipmentAttrs.map((a) => a.attrIndex)) : -1
+        const equipment = parsedData[equipIndex]
+        const itemId = equipment[1]
+        const equipmentInfo = equipmentOptions.find((opt) => opt.id === itemId)
+
+        const newAttr = {
+          equipIndex,
+          attrIndex: maxAttrIndex + 1,
+          equipmentName: equipmentInfo?.name || `ID: ${itemId}`,
+          attrId: attributeOptions[0]?.id || 1,
+          attrName: attributeOptions[0]?.name || "Unknown",
+          value: 0,
+        }
+
+        return [...prev, newAttr]
+      })
+    },
+    [parsedData, equipmentOptions, attributeOptions],
+  )
+
+  const copyToClipboard = useCallback(async () => {
     const exportData = JSON.parse(JSON.stringify(parsedData))
 
     exportData.forEach((equipment: any[], equipIndex: number) => {
@@ -339,41 +382,47 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
         variant: "destructive",
       })
     }
-  }
+  }, [parsedData, attributes, toast])
 
   const groupedAttributes = useMemo(() => {
-    return attributes.reduce((acc: any, attr) => {
-      const key = `${attr.equipIndex}-${attr.equipmentName}`
-      if (!acc[key]) {
-        acc[key] = {
+    const groups = new Map<number, { equipmentName: string; attributes: any[] }>()
+
+    attributes.forEach((attr) => {
+      if (!groups.has(attr.equipIndex)) {
+        groups.set(attr.equipIndex, {
           equipmentName: attr.equipmentName,
           attributes: [],
-        }
+        })
       }
-      acc[key].attributes.push(attr)
-      return acc
-    }, {})
+      groups.get(attr.equipIndex)!.attributes.push(attr)
+    })
+
+    return groups
   }, [attributes])
 
-  const toggleCard = (key: string) => {
+  const allGroups = useMemo(() => {
+    return Array.from(groupedAttributes.entries())
+  }, [groupedAttributes])
+
+  const toggleCard = useCallback((equipIndex: number) => {
     setExpandedCards((prev) => {
       const newSet = new Set(prev)
-      if (newSet.has(key)) {
-        newSet.delete(key)
+      if (newSet.has(equipIndex)) {
+        newSet.delete(equipIndex)
       } else {
-        newSet.add(key)
+        newSet.add(equipIndex)
       }
       return newSet
     })
-  }
+  }, [])
 
-  const expandAll = () => {
-    setExpandedCards(new Set(Object.keys(groupedAttributes)))
-  }
+  const expandAll = useCallback(() => {
+    setExpandedCards(new Set(Array.from(groupedAttributes.keys())))
+  }, [groupedAttributes])
 
-  const collapseAll = () => {
+  const collapseAll = useCallback(() => {
     setExpandedCards(new Set())
-  }
+  }, [])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
@@ -428,19 +477,20 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
 
         <ScrollArea className="h-[550px] border rounded-lg">
           <div className="p-4 space-y-4">
-            {Object.entries(groupedAttributes).map(([key, group]: [string, any]) => (
+            {allGroups.map(([equipIndex, group]) => (
               <EquipmentCard
-                key={key}
-                group={group}
-                attributes={attributes}
-                attributeOptions={attributeOptions}
+                key={equipIndex}
+                equipIndex={equipIndex}
+                equipmentName={group.equipmentName}
+                attributes={group.attributes}
+                comboboxOptions={comboboxOptions}
                 onUpdate={updateAttribute}
                 onMoveUp={moveAttributeUp}
                 onMoveDown={moveAttributeDown}
                 onDelete={deleteAttribute}
                 onAddAttribute={addAttribute}
-                isExpanded={expandedCards.has(key)}
-                onToggle={() => toggleCard(key)}
+                isExpanded={expandedCards.has(equipIndex)}
+                onToggle={() => toggleCard(equipIndex)}
               />
             ))}
             {attributes.length === 0 && (
