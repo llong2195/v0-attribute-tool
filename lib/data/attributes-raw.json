@@ -1,0 +1,764 @@
+[
+  {
+    "id": 0,
+    "name": "Tấn công",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 1,
+    "name": "Thủ vật",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 2,
+    "name": "Né tránh",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 3,
+    "name": "Chính xác",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 4,
+    "name": "Chí mạng",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 5,
+    "name": "Sức khỏe",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 6,
+    "name": "Thủ ma",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 7,
+    "name": "chỉ số 7",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 8,
+    "name": "chỉ số 8",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 9,
+    "name": "chỉ số 9",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 10,
+    "name": "Tăng sức mạnh",
+    "isPercent": 0,
+    "colorPaint": 3
+  },
+  {
+    "id": 11,
+    "name": "Tăng nhanh nhẹn",
+    "isPercent": 0,
+    "colorPaint": 3
+  },
+  {
+    "id": 12,
+    "name": "Tăng tinh thần",
+    "isPercent": 0,
+    "colorPaint": 3
+  },
+  {
+    "id": 13,
+    "name": "Tăng sức khoẻ",
+    "isPercent": 0,
+    "colorPaint": 3
+  },
+  {
+    "id": 14,
+    "name": "Gây mù",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 15,
+    "name": "Đóng băng",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 16,
+    "name": "Trúng độc",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 17,
+    "name": "Gây choáng",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 18,
+    "name": "Hoá thạch",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 19,
+    "name": "Giảm tốc",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 20,
+    "name": "Kháng giảm tốc",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 21,
+    "name": "Kháng trúng độc",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 22,
+    "name": "Kháng gây mù",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 23,
+    "name": "Kháng đóng băng",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 24,
+    "name": "Kháng gây choáng",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 25,
+    "name": "Kháng hoá thạch",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 26,
+    "name": "Tăng x2 mỗi lần đánh",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 27,
+    "name": "Tăng tỷ lệ rớt bảo vật",
+    "isPercent": 1,
+    "colorPaint": 3
+  },
+  {
+    "id": 28,
+    "name": "Giảm st vật",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 29,
+    "name": "Giảm st ma",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 30,
+    "name": "Tăng tấn công",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 31,
+    "name": "Xuyên giáp",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 32,
+    "name": "Phản st",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 33,
+    "name": "Tăng HP",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 34,
+    "name": "Tăng MP",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 35,
+    "name": "Cộng sức mạnh",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 36,
+    "name": "Cộng khéo léo",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 37,
+    "name": "Cộng tinh thần",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 38,
+    "name": "Cộng sức khoẻ",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 39,
+    "name": "Cộng kỹ năng",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 40,
+    "name": "Tăng chí mạng",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 41,
+    "name": "Tăng st chí mạng",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 42,
+    "name": "chưa dùng",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 43,
+    "name": "kỹ năng 1 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 44,
+    "name": "kỹ năng 2 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 45,
+    "name": "kỹ năng 3 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 46,
+    "name": "kỹ năng 4 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 47,
+    "name": "kỹ năng 5 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 48,
+    "name": "kỹ năng 6 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 49,
+    "name": "kỹ năng 7 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 50,
+    "name": "kỹ năng 8 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 51,
+    "name": "kỹ năng 9 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 52,
+    "name": "kỹ năng 10 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 53,
+    "name": "kỹ năng 11 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 54,
+    "name": "kỹ năng 12 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 55,
+    "name": "kỹ năng 13 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 56,
+    "name": "kỹ năng 14 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 57,
+    "name": "kỹ năng 15 cộng thêm",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 58,
+    "name": "Tăng công",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 59,
+    "name": "Tăng thủ ma",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 60,
+    "name": "Tăng thủ vật",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 61,
+    "name": "Bỏ qua tc ma",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 62,
+    "name": "Bỏ qua tc vật",
+    "isPercent": 1,
+    "colorPaint": 1
+  },
+  {
+    "id": 63,
+    "name": "Tăng thủ ma trang bị",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 64,
+    "name": "Tăng thủ vật trang bị",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 65,
+    "name": "Bạo kích",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 66,
+    "name": "Sét lan",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 67,
+    "name": "Độc lan",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 68,
+    "name": "Băng lan",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 69,
+    "name": "Tăng sét lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 70,
+    "name": "Tăng độc lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 71,
+    "name": "Tăng băng lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 72,
+    "name": "Tăng st băng lan",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 73,
+    "name": "Tăng st sét lan",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 74,
+    "name": "Tăng st độc lan",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 75,
+    "name": "Hoá người tuyết",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 76,
+    "name": "Kháng bạo kích",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 77,
+    "name": "Hút máu",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 78,
+    "name": "Hồi HP",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 79,
+    "name": "Hồi MP",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 80,
+    "name": "Tàn phế",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 81,
+    "name": "Hấp thu sát thương",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 82,
+    "name": "Câm lặng",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 83,
+    "name": "Tăng tỷ lệ rớt vật phẩm",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 84,
+    "name": "Tăng tỷ lệ rớt xu",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 85,
+    "name": "Kháng băng lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 86,
+    "name": "Kháng sét lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 87,
+    "name": "Kháng độc lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 88,
+    "name": "Tăng thủ trang bị",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 89,
+    "name": "Lửa lan",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 90,
+    "name": "Tăng lửa lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 91,
+    "name": "Tăng st lửa lan",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 92,
+    "name": "Kháng lửa lan",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 93,
+    "name": "St hắc ám",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 94,
+    "name": "St ánh sáng",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 95,
+    "name": "Xh hắc ám",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 96,
+    "name": "Xh ánh sáng",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 97,
+    "name": "Gây hoảng sợ:",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 98,
+    "name": "Xh hoảng sợ",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 99,
+    "name": "St theo chủ",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 100,
+    "name": "Sức khoẻ",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 101,
+    "name": "St max Hp",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 102,
+    "name": "Ru ngủ",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 103,
+    "name": "Choáng",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 104,
+    "name": "Bỏng",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 105,
+    "name": "Trúng độc",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 106,
+    "name": "Suy yếu",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 107,
+    "name": "Chuyển st qua mp",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 108,
+    "name": "Gia tăng tc",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 109,
+    "name": "Hút hp",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 110,
+    "name": "Sát thương độc",
+    "isPercent": 0,
+    "colorPaint": 0
+  },
+  {
+    "id": 111,
+    "name": "Tăng exp",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 112,
+    "name": "Tác động suy yếu",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 113,
+    "name": "Tl hút hp",
+    "isPercent": 2,
+    "colorPaint": 0
+  },
+  {
+    "id": 114,
+    "name": "Nhân thêm st khi bỏng",
+    "isPercent": 1,
+    "colorPaint": 0
+  },
+  {
+    "id": 115,
+    "name": "Sát thương chuẩn",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 116,
+    "name": "Chỉ số vũ khí tăng",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 117,
+    "name": "Tỷ lệ gây sát thương chuẩn",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 118,
+    "name": "Giảm sát thương cuối",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 119,
+    "name": "Nguyệt ảnh gây st(10%-15%) tl xuất hiện",
+    "isPercent": 2,
+    "colorPaint": 2
+  },
+  {
+    "id": 120,
+    "name": "Kháng hoả",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 121,
+    "name": "Kháng thuỷ",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 122,
+    "name": "Kháng mộc",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 123,
+    "name": "Kháng kim",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 124,
+    "name": "Kháng thổ",
+    "isPercent": 2,
+    "colorPaint": 1
+  },
+  {
+    "id": 125,
+    "name": "Giá lượng",
+    "isPercent": 0,
+    "colorPaint": 2
+  },
+  {
+    "id": 126,
+    "name": "Số lượng",
+    "isPercent": 0,
+    "colorPaint": 2
+  }
+]
