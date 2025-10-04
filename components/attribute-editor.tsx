@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Copy, RefreshCw, Check, ChevronDown, ChevronUp } from "lucide-react"
+import { Copy, RefreshCw, Check, ChevronDown, ChevronUp, Plus, ArrowUp, ArrowDown, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 
 interface AttributeOption {
@@ -35,14 +35,24 @@ const AttributeItem = memo(
     globalIndex,
     attributeOptions,
     onUpdate,
+    onMoveUp,
+    onMoveDown,
+    onDelete,
+    isFirst,
+    isLast,
   }: {
     attr: any
     globalIndex: number
     attributeOptions: AttributeOption[]
     onUpdate: (index: number, field: "value" | "attrId", newValue: any) => void
+    onMoveUp: (index: number) => void
+    onMoveDown: (index: number) => void
+    onDelete: (index: number) => void
+    isFirst: boolean
+    isLast: boolean
   }) => {
     return (
-      <div className="flex items-center gap-3 p-3 border rounded-lg bg-muted/50">
+      <div className="flex items-center gap-2 p-3 border rounded-lg bg-muted/50">
         <Label className="text-sm font-mono min-w-[60px]">id: {attr.attrId}</Label>
         <Input
           type="number"
@@ -65,6 +75,34 @@ const AttributeItem = memo(
             ))}
           </SelectContent>
         </Select>
+        <div className="flex gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onMoveUp(globalIndex)}
+            disabled={isFirst}
+          >
+            <ArrowUp className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => onMoveDown(globalIndex)}
+            disabled={isLast}
+          >
+            <ArrowDown className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:text-destructive"
+            onClick={() => onDelete(globalIndex)}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     )
   },
@@ -77,6 +115,10 @@ const EquipmentCard = memo(
     attributes,
     attributeOptions,
     onUpdate,
+    onMoveUp,
+    onMoveDown,
+    onDelete,
+    onAddAttribute,
     isExpanded,
     onToggle,
   }: {
@@ -84,6 +126,10 @@ const EquipmentCard = memo(
     attributes: any[]
     attributeOptions: AttributeOption[]
     onUpdate: (index: number, field: "value" | "attrId", newValue: any) => void
+    onMoveUp: (index: number) => void
+    onMoveDown: (index: number) => void
+    onDelete: (index: number) => void
+    onAddAttribute: (equipIndex: number) => void
     isExpanded: boolean
     onToggle: () => void
   }) => {
@@ -103,6 +149,7 @@ const EquipmentCard = memo(
               const globalIndex = attributes.findIndex(
                 (a) => a.equipIndex === attr.equipIndex && a.attrIndex === attr.attrIndex,
               )
+              const equipmentAttrs = group.attributes
               return (
                 <AttributeItem
                   key={`${attr.equipIndex}-${attr.attrIndex}`}
@@ -110,9 +157,22 @@ const EquipmentCard = memo(
                   globalIndex={globalIndex}
                   attributeOptions={attributeOptions}
                   onUpdate={onUpdate}
+                  onMoveUp={onMoveUp}
+                  onMoveDown={onMoveDown}
+                  onDelete={onDelete}
+                  isFirst={index === 0}
+                  isLast={index === equipmentAttrs.length - 1}
                 />
               )
             })}
+            <Button
+              variant="outline"
+              className="w-full bg-transparent"
+              onClick={() => onAddAttribute(group.attributes[0].equipIndex)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Thêm thuộc tính
+            </Button>
           </CardContent>
         )}
       </Card>
@@ -173,13 +233,93 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
     setAttributes(updated)
   }
 
+  const moveAttributeUp = (globalIndex: number) => {
+    const attr = attributes[globalIndex]
+    const equipmentAttrs = attributes.filter((a) => a.equipIndex === attr.equipIndex)
+    const localIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attr.attrIndex)
+
+    if (localIndex === 0) return
+
+    const updated = [...attributes]
+    const currentGlobalIndex = globalIndex
+    const prevAttr = equipmentAttrs[localIndex - 1]
+    const prevGlobalIndex = attributes.findIndex(
+      (a) => a.equipIndex === prevAttr.equipIndex && a.attrIndex === prevAttr.attrIndex,
+    )
+
+    // Swap attrIndex values
+    const tempIndex = updated[currentGlobalIndex].attrIndex
+    updated[currentGlobalIndex].attrIndex = updated[prevGlobalIndex].attrIndex
+    updated[prevGlobalIndex].attrIndex = tempIndex
+
+    setAttributes(updated)
+  }
+
+  const moveAttributeDown = (globalIndex: number) => {
+    const attr = attributes[globalIndex]
+    const equipmentAttrs = attributes.filter((a) => a.equipIndex === attr.equipIndex)
+    const localIndex = equipmentAttrs.findIndex((a) => a.attrIndex === attr.attrIndex)
+
+    if (localIndex === equipmentAttrs.length - 1) return
+
+    const updated = [...attributes]
+    const currentGlobalIndex = globalIndex
+    const nextAttr = equipmentAttrs[localIndex + 1]
+    const nextGlobalIndex = attributes.findIndex(
+      (a) => a.equipIndex === nextAttr.equipIndex && a.attrIndex === nextAttr.attrIndex,
+    )
+
+    // Swap attrIndex values
+    const tempIndex = updated[currentGlobalIndex].attrIndex
+    updated[currentGlobalIndex].attrIndex = updated[nextGlobalIndex].attrIndex
+    updated[nextGlobalIndex].attrIndex = tempIndex
+
+    setAttributes(updated)
+  }
+
+  const deleteAttribute = (globalIndex: number) => {
+    const attr = attributes[globalIndex]
+    const updated = attributes.filter((_, i) => i !== globalIndex)
+
+    // Reindex remaining attributes for the same equipment
+    const reindexed = updated.map((a) => {
+      if (a.equipIndex === attr.equipIndex && a.attrIndex > attr.attrIndex) {
+        return { ...a, attrIndex: a.attrIndex - 1 }
+      }
+      return a
+    })
+
+    setAttributes(reindexed)
+  }
+
+  const addAttribute = (equipIndex: number) => {
+    const equipmentAttrs = attributes.filter((a) => a.equipIndex === equipIndex)
+    const maxAttrIndex = equipmentAttrs.length > 0 ? Math.max(...equipmentAttrs.map((a) => a.attrIndex)) : -1
+    const equipment = parsedData[equipIndex]
+    const itemId = equipment[1]
+    const equipmentInfo = equipmentOptions.find((opt) => opt.id === itemId)
+
+    const newAttr = {
+      equipIndex,
+      attrIndex: maxAttrIndex + 1,
+      equipmentName: equipmentInfo?.name || `ID: ${itemId}`,
+      attrId: attributeOptions[0]?.id || 1,
+      attrName: attributeOptions[0]?.name || "Unknown",
+      value: 0,
+    }
+
+    setAttributes([...attributes, newAttr])
+  }
+
   const copyToClipboard = async () => {
     const exportData = JSON.parse(JSON.stringify(parsedData))
 
-    attributes.forEach((attr) => {
-      const { equipIndex, attrIndex, attrId, value } = attr
-      exportData[equipIndex][16][attrIndex][0] = attrId
-      exportData[equipIndex][16][attrIndex][1] = Number.parseInt(value)
+    exportData.forEach((equipment: any[], equipIndex: number) => {
+      const equipmentAttrs = attributes
+        .filter((a) => a.equipIndex === equipIndex)
+        .sort((a, b) => a.attrIndex - b.attrIndex)
+
+      equipment[16] = equipmentAttrs.map((attr) => [attr.attrId, Number.parseInt(attr.value)])
     })
 
     const jsonOutput = JSON.stringify(exportData, null, 2)
@@ -295,6 +435,10 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
                 attributes={attributes}
                 attributeOptions={attributeOptions}
                 onUpdate={updateAttribute}
+                onMoveUp={moveAttributeUp}
+                onMoveDown={moveAttributeDown}
+                onDelete={deleteAttribute}
+                onAddAttribute={addAttribute}
                 isExpanded={expandedCards.has(key)}
                 onToggle={() => toggleCard(key)}
               />
