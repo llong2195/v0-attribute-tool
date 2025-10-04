@@ -321,12 +321,13 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
     setAttributes((prev) => {
       const filtered = prev.filter((a) => !(a.equipIndex === equipIndex && a.attrIndex === attrIndex))
 
-      return filtered.map((attr) => {
-        if (attr.equipIndex === equipIndex && attr.attrIndex > attrIndex) {
-          return { ...attr, attrIndex: attr.attrIndex - 1 }
-        }
-        return attr
-      })
+      const equipmentAttrs = filtered
+        .filter((a) => a.equipIndex === equipIndex)
+        .sort((a, b) => a.attrIndex - b.attrIndex)
+        .map((attr, idx) => ({ ...attr, attrIndex: idx }))
+
+      const otherAttrs = filtered.filter((a) => a.equipIndex !== equipIndex)
+      return [...otherAttrs, ...equipmentAttrs].sort((a, b) => a.equipIndex - b.equipIndex)
     })
   }, [])
 
@@ -355,6 +356,15 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
   )
 
   const copyToClipboard = useCallback(async () => {
+    if (parsedData.length === 0) {
+      toast({
+        title: "Lỗi",
+        description: "Không có dữ liệu để xuất",
+        variant: "destructive",
+      })
+      return
+    }
+
     const exportData = JSON.parse(JSON.stringify(parsedData))
 
     exportData.forEach((equipment: any[], equipIndex: number) => {
@@ -362,7 +372,10 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
         .filter((a) => a.equipIndex === equipIndex)
         .sort((a, b) => a.attrIndex - b.attrIndex)
 
-      equipment[16] = equipmentAttrs.map((attr) => [attr.attrId, Number.parseInt(attr.value)])
+      equipment[16] = equipmentAttrs.map((attr) => {
+        const numValue = typeof attr.value === "number" ? attr.value : Number(attr.value) || 0
+        return [attr.attrId, numValue]
+      })
     })
 
     const jsonOutput = JSON.stringify(exportData, null, 2)
@@ -399,10 +412,6 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
 
     return groups
   }, [attributes])
-
-  const allGroups = useMemo(() => {
-    return Array.from(groupedAttributes.entries())
-  }, [groupedAttributes])
 
   const toggleCard = useCallback((equipIndex: number) => {
     setExpandedCards((prev) => {
@@ -477,7 +486,7 @@ export function AttributeEditor({ attributeOptions, equipmentOptions }: Attribut
 
         <ScrollArea className="h-[550px] border rounded-lg">
           <div className="p-4 space-y-4">
-            {allGroups.map(([equipIndex, group]) => (
+            {Array.from(groupedAttributes.entries()).map(([equipIndex, group]) => (
               <EquipmentCard
                 key={equipIndex}
                 equipIndex={equipIndex}
